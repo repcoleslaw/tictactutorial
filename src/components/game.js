@@ -7,7 +7,10 @@ import Board from'./board';
 
 import '../App.css'
 
+
+
 class Game extends Component{
+  
 
   render(){
     return(

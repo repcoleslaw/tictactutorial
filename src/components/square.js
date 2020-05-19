@@ -1,10 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 // import styling
 
 import '../App.css'
 
-class Square extends Component {
+// [4] Since square just has to worry about rendering, and is not in control of its own state, we can make it a React Component.
+
+function Square(props){
 
   /*
   [3]coming back to this, since we LIFTED the state to the board, we remove the constructor in the Square as it does not need to manage its state on its own. 
@@ -21,16 +23,16 @@ class Square extends Component {
 
 
 
-  render(){
+
     return(
       <button 
       className='square' 
-      onClick={() => this.props.onClick()}
+      onClick={props.onClick}
       >
-        {this.props.value}
+        {props.value}
       </button>
     )
-  }
+  
 }
 
 export default Square;

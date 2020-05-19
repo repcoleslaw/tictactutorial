@@ -17,6 +17,8 @@ class Board extends Component{
     super(props);
     this.state = {
       squares: Array(9).fill(null),
+      xIsNext: true,
+
     }
     // this creates an array of 9 items 'filled' w the value null. If we fill the board it will look like this.
     
@@ -55,9 +57,22 @@ class Board extends Component{
   handleClick(i){
     // since this operating on an index of the array, we need use the slice method to grab ONLY the [i] called.
     const square = this.state.squares.slice();
-    square[i] = 'X';
-    this.setState({squares: square})
+    if (calculateWinner(square) || square[i]){
+      return;
+    }
+    square[i] = this.state.xIsNext ? 'X' : 'O';
+      // we are checking the boolean of 'is X next' and using the turnary operator of ? (if true) ___ : (else) ___;
+    this.setState({
+      squares: square,
+      xIsNext: !this.state.xIsNext,
+    })
     // first square is the state object couple, paired with the square defined within the method.
+
+  }
+
+  handleReset(){
+    alert('reset the board!');
+
 
   }
 
@@ -65,7 +80,16 @@ class Board extends Component{
 
   render(){
     // we are making status a variable, of who is the next player
-    const status = 'Next player: X';
+    // const status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+
+    const winner = calculateWinner(this.state.squares);
+    let status;
+    if (winner){
+      status = "Winner" + winner;
+    } else {
+      status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+    }
+
     return(
       <div> 
         <p>{status}</p>
@@ -85,9 +109,39 @@ class Board extends Component{
           {this.renderSquare(7)}
           {this.renderSquare(8)}
         </div>
+        <button onClick={this.handleReset}> Reset </button>
       </div>
     );
   }
 };
 
 export default Board;
+
+// we can declare other functions in class files to handle things that do not need to be rendered on the screen.
+
+function calculateWinner(squares){
+
+  // the following lines are all the possible win conditions in a 3 x 3 grid array.
+  const lines = [
+    //rows
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    //columns
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    //diagonals
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+
+  for(let i = 0; i<lines.length; i++){
+    const [a,b,c] = lines[i];
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]){
+      // check if square A exists, and establish a value, check if that value exists in position B, as well as C.
+      return squares[a];
+    }
+  }
+  return null;
+}
